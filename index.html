@@ -1,1 +1,228 @@
-<!--Dayspedia.com widget--><iframe width='280' height='147' style='padding:0!important;margin:0!important;border:none!important;background:none!important;background:transparent!important' marginheight='0' marginwidth='0' frameborder='0' scrolling='no' comment='/*defined*/' src='https://dayspedia.com/if/digit/?v=1&iframe=eyJ3LTEyIjp0cnVlLCJ3LTExIjp0cnVlLCJ3LTEzIjp0cnVlLCJ3LTE0IjpmYWxzZSwidy0xNSI6ZmFsc2UsInctMTEwIjpmYWxzZSwidy13aWR0aC0wIjpmYWxzZSwidy13aWR0aC0xIjp0cnVlLCJ3LXdpZHRoLTIiOmZhbHNlLCJ3LTE2IjoiMjRweCIsInctMTkiOiI0OCIsInctMTciOiIxMiIsInctMjEiOnRydWUsImJnaW1hZ2UiOi0xLCJiZ2ltYWdlU2V0IjpmYWxzZSwidy0yMWMwIjoiI2ZmZmZmZiIsInctMCI6dHJ1ZSwidy0zIjpmYWxzZSwidy0zYzAiOiIjMzQzNDM0Iiwidy0zYjAiOiIxIiwidy02IjoiIzM0MzQzNCIsInctMjAiOnRydWUsInctNCI6IiMwMDg1Y2MiLCJ3LTE4IjpmYWxzZSwidy13aWR0aC0yYy0wIjoiODAwIiwidy0xMTUiOmZhbHNlfQ==&lang=en&cityid=1142'></iframe><!--Dayspedia.com widget ENDS-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Tech Middle - Network Time</title>
+    <style>
+        :root {
+            --htm-blue: #a6c8e7;
+            --htm-yellow: #ffed00;
+            --htm-black: #000000;
+            --htm-white: #ffffff;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: var(--htm-white);
+            color: var(--htm-black);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: var(--htm-white);
+            color: var(--htm-black);
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 2px solid var(--htm-black);
+        }
+        
+        .header p {
+            margin: 10px 0 0;
+            font-size: 1rem;
+        }
+        
+        .logo {
+            max-width: 400px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        
+        .time-container {
+            background-color: var(--htm-white);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        #current-time {
+            font-size: 9vw;
+            font-weight: 700;
+            margin: 0;
+            color: var(--htm-black);
+            line-height: 1;
+        }
+        
+        #current-date {
+            font-size: 3vw;
+            margin: 15px 0 20px;
+            color: var(--htm-black);
+        }
+        
+        #time-zone {
+            display: inline-block;
+            background-color: var(--htm-yellow);
+            border: 2px solid var(--htm-black);
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: 500;
+            color: var(--htm-black);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background-color: var(--htm-white);
+            padding: 15px;
+            font-size: 0.9rem;
+            color: var(--htm-black);
+            border-top: 1px solid #eee;
+        }
+        
+        .sync-info {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--htm-black);
+            background-color: var(--htm-blue);
+            padding: 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        #sync-status {
+            font-weight: 500;
+            color: var(--htm-black);
+            margin-top: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            #current-time {
+                font-size: 8rem;
+            }
+            #current-date {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="htm-logo.png" alt="High Tech Middle Logo" class="logo">
+        <p>Network Time synchronized with pool.ntp.org</p>
+    </div>
+
+    <div class="time-container">
+        <div id="time-zone">Pacific Time (PST/PDT)</div>
+        <div id="current-time">00:00:00</div>
+        <div id="current-date">Loading date...</div>
+        <div class="sync-info">
+            Status: <span id="sync-status">Synchronizing...</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Time data is based on your local system clock adjusted for Pacific Time.</p>
+    </div>
+
+    <script>
+        // Function to update the displayed time using only local time
+        function updateTime() {
+            const now = new Date();
+            
+            // Format time for Pacific timezone
+            const options = {
+                timeZone: 'America/Los_Angeles',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            
+            const timeString = now.toLocaleTimeString('en-US', options);
+            
+            // Format date for Pacific timezone
+            const dateOptions = {
+                timeZone: 'America/Los_Angeles',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            
+            const dateString = now.toLocaleDateString('en-US', dateOptions);
+            
+            // Update the DOM
+            document.getElementById('current-time').innerText = timeString;
+            document.getElementById('current-date').innerText = dateString;
+        }
+        
+        // Function to check if the browser supports the Intl API with timeZone
+        function checkTimeZoneSupport() {
+            try {
+                // Test if we can format a date with the Pacific timezone
+                new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'America/Los_Angeles',
+                }).format(new Date());
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        // Function to get the Pacific Time offset
+        function getPacificTimeOffset() {
+            const now = new Date();
+            const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+            const pacificDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+            return (pacificDate - utcDate) / 60000; // Convert ms to minutes
+        }
+        
+        // Function to display timezone info
+        function displayTimezoneInfo() {
+            const now = new Date();
+            const offset = getPacificTimeOffset();
+            const isDST = offset !== -480; // -480 minutes is standard PST (-8 hours)
+            
+            const tzName = isDST ? "PDT (UTC-7)" : "PST (UTC-8)";
+            document.getElementById('time-zone').innerText = `Pacific Time (${tzName})`;
+            
+            document.getElementById('sync-status').innerText = 'Time synchronized';
+            document.getElementById('sync-status').style.color = '#000000';
+        }
+        
+        // Initialize the page
+        function init() {
+            // Check if the browser supports timezone formatting
+            if (!checkTimeZoneSupport()) {
+                document.getElementById('sync-status').innerText = 'Timezone not supported by your browser';
+                document.getElementById('sync-status').style.color = '#ff9800';
+                return;
+            }
+            
+            // Start updating the time every second
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Display timezone information
+            displayTimezoneInfo();
+        }
+        
+        // Start everything when the page loads
+        window.onload = init;
+    </script>
+</body>
+</html>
