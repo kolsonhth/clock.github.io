@@ -12,15 +12,22 @@
             --htm-white: #ffffff;
         }
         
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            max-width: 100%;
             margin: 0;
             padding: 0;
             text-align: center;
             background-color: var(--htm-white);
             color: var(--htm-black);
             height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
         }
@@ -28,24 +35,26 @@
         .header {
             background-color: var(--htm-white);
             color: var(--htm-black);
-            padding: 20px;
+            padding: 10px;
             width: 100%;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
             border-bottom: 2px solid var(--htm-black);
+            flex-shrink: 0;
+            height: 10vh;
         }
         
         .header p {
-            margin: 10px 0 0;
-            font-size: 1rem;
+            margin: 5px 0 0;
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
         }
         
         .logo {
-            max-width: 400px;
+            max-width: min(300px, 80%);
+            max-height: 60%;
             height: auto;
-            margin-bottom: 10px;
+            object-fit: contain;
         }
         
         .time-container {
@@ -55,22 +64,26 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 10px;
+            height: 80vh;
+            width: 100%;
         }
         
         #current-time {
-            font-size: 9vw;
+            font-size: clamp(3rem, 18vw, 20rem);
             font-weight: 700;
             margin: 0;
             color: var(--htm-black);
             line-height: 1;
+            letter-spacing: -0.02em;
+            width: 100%;
         }
         
         #current-date {
-            font-size: 3vw;
-            margin: 15px 0 20px;
+            font-size: clamp(1rem, 3vw, 2.5rem);
+            margin: 10px 0;
             color: var(--htm-black);
+            width: 100%;
         }
         
         #time-zone {
@@ -78,43 +91,139 @@
             background-color: var(--htm-yellow);
             border: 2px solid var(--htm-black);
             border-radius: 4px;
-            padding: 8px 16px;
+            padding: clamp(4px, 1vw, 10px) clamp(8px, 2vw, 16px);
             font-weight: 500;
             color: var(--htm-black);
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+            margin-bottom: 10px;
         }
         
         .footer {
             background-color: var(--htm-white);
-            padding: 15px;
-            font-size: 0.9rem;
+            padding: 8px;
+            font-size: clamp(0.7rem, 1.2vw, 0.8rem);
             color: var(--htm-black);
             border-top: 1px solid #eee;
+            flex-shrink: 0;
+            height: 5vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .sync-info {
-            margin-top: 20px;
-            font-size: 1rem;
+            margin-top: 10px;
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
             color: var(--htm-black);
             background-color: var(--htm-blue);
-            padding: 10px;
+            padding: clamp(4px, 1vw, 8px);
             border-radius: 4px;
             display: inline-block;
+            max-width: 90%;
         }
         
         #sync-status {
             font-weight: 500;
             color: var(--htm-black);
-            margin-top: 5px;
         }
         
-        @media (min-width: 800px) {
-            #current-time {
-                font-size: 14rem;
+        /* Portrait phones */
+        @media (max-height: 500px) {
+            .header {
+                height: 15vh;
+                padding: 5px;
             }
+            
+            .time-container {
+                height: 75vh;
+                padding: 5px;
+            }
+            
+            .footer {
+                height: 10vh;
+                padding: 2px;
+            }
+            
+            #current-time {
+                font-size: clamp(2rem, 14vw, 15rem);
+            }
+            
             #current-date {
-                font-size: 4rem;
+                font-size: clamp(0.8rem, 2vw, 1.5rem);
+                margin: 5px 0;
+            }
+        }
+        
+        /* Tablets */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .header {
+                padding: 15px;
+            }
+            
+            .logo {
+                max-width: 350px;
+            }
+            
+            #current-time {
+                font-size: clamp(4rem, 16vw, 18rem);
+            }
+        }
+        
+        /* Large screens */
+        @media (min-width: 1024px) {
+            .header {
+                padding: 15px;
+            }
+            
+            .logo {
+                max-width: 400px;
+            }
+            
+            #current-time {
+                letter-spacing: -0.04em;
+            }
+            
+            .time-container {
+                padding: 20px;
+            }
+        }
+        
+        /* Very small devices */
+        @media (max-width: 320px) {
+            #current-time {
+                font-size: clamp(2rem, 12vw, 15rem);
+            }
+            
+            #current-date {
+                font-size: clamp(0.7rem, 2vw, 1rem);
+            }
+            
+            .header p {
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Handle orientation changes */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .header {
+                height: 20vh;
+                padding: 5px;
+            }
+            
+            .time-container {
+                height: 70vh;
+            }
+            
+            .footer {
+                height: 10vh;
+            }
+            
+            #current-time {
+                font-size: clamp(2rem, 12vw, 14rem);
+            }
+            
+            #current-date {
+                margin: 5px 0;
             }
         }
     </style>
