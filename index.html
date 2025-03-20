@@ -69,14 +69,28 @@
             width: 100%;
         }
         
-        #current-time {
-            font-size: clamp(3rem, 18vw, 20rem);
+        .time-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        #time-digits {
+            font-size: clamp(3rem, 20vw, 22rem);
             font-weight: 700;
             margin: 0;
             color: var(--htm-black);
-            line-height: 1;
+            line-height: 0.9;
             letter-spacing: -0.02em;
-            width: 100%;
+        }
+        
+        #am-pm {
+            font-size: clamp(1.5rem, 5vw, 4rem);
+            font-weight: 600;
+            color: var(--htm-black);
+            margin-top: -5px;
+            margin-bottom: 5px;
         }
         
         #current-date {
@@ -144,8 +158,12 @@
                 padding: 2px;
             }
             
-            #current-time {
-                font-size: clamp(2rem, 14vw, 15rem);
+            #time-digits {
+                font-size: clamp(2rem, 16vw, 17rem);
+            }
+            
+            #am-pm {
+                font-size: clamp(1rem, 3vw, 2.5rem);
             }
             
             #current-date {
@@ -164,8 +182,12 @@
                 max-width: 350px;
             }
             
-            #current-time {
-                font-size: clamp(4rem, 16vw, 18rem);
+            #time-digits {
+                font-size: clamp(4rem, 18vw, 20rem);
+            }
+            
+            #am-pm {
+                font-size: clamp(1.5rem, 4vw, 3.5rem);
             }
         }
         
@@ -179,7 +201,7 @@
                 max-width: 400px;
             }
             
-            #current-time {
+            #time-digits {
                 letter-spacing: -0.04em;
             }
             
@@ -190,8 +212,12 @@
         
         /* Very small devices */
         @media (max-width: 320px) {
-            #current-time {
-                font-size: clamp(2rem, 12vw, 15rem);
+            #time-digits {
+                font-size: clamp(2rem, 14vw, 16rem);
+            }
+            
+            #am-pm {
+                font-size: clamp(1rem, 3vw, 2rem);
             }
             
             #current-date {
@@ -218,8 +244,12 @@
                 height: 10vh;
             }
             
-            #current-time {
-                font-size: clamp(2rem, 12vw, 14rem);
+            #time-digits {
+                font-size: clamp(2rem, 14vw, 16rem);
+            }
+            
+            #am-pm {
+                font-size: clamp(1rem, 3vw, 2rem);
             }
             
             #current-date {
@@ -236,7 +266,10 @@
 
     <div class="time-container">
         <div id="time-zone">Pacific Time (PST/PDT)</div>
-        <div id="current-time">00:00:00</div>
+        <div class="time-display">
+            <div id="time-digits">00:00:00</div>
+            <div id="am-pm">AM</div>
+        </div>
         <div id="current-date">Loading date...</div>
         <div class="sync-info">
             Status: <span id="sync-status">Synchronizing...</span>
@@ -263,6 +296,11 @@
             
             const timeString = now.toLocaleTimeString('en-US', options);
             
+            // Split the time string to separate time digits from AM/PM
+            const timeComponents = timeString.split(' ');
+            const timeDigits = timeComponents[0];
+            const amPm = timeComponents[1];
+            
             // Format date for Pacific timezone
             const dateOptions = {
                 timeZone: 'America/Los_Angeles',
@@ -275,7 +313,8 @@
             const dateString = now.toLocaleDateString('en-US', dateOptions);
             
             // Update the DOM
-            document.getElementById('current-time').innerText = timeString;
+            document.getElementById('time-digits').innerText = timeDigits;
+            document.getElementById('am-pm').innerText = amPm;
             document.getElementById('current-date').innerText = dateString;
         }
         
